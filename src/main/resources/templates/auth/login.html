@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/head :: head('Đăng nhập - ShipHola')}"></head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <span class="logo-icon">🚚</span>
+                    <span class="logo-text">ShipHola</span>
+                </div>
+                <h1>Đăng nhập</h1>
+                <p>Đăng nhập để tiếp tục</p>
+            </div>
+
+            <div th:replace="~{common/alerts :: alerts}"></div>
+
+            <form th:action="@{/auth/login}" method="post" class="auth-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="rememberMe">
+                        <span>Ghi nhớ đăng nhập</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Chưa có tài khoản? <a th:href="@{/auth/register}">Đăng ký ngay</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, content, role, active)">
+<head th:replace="~{common/head :: head(${title})}"></head>
+<body>
+    <div class="app-container">
+        <aside th:replace="~{common/sidebar :: sidebar(${role}, ${active})}"></aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="top-bar-left">
+                    <button class="btn-toggle-sidebar" id="toggleSidebar">
+                        <span>☰</span>
+                    </button>
+                    <h1 class="page-title" th:text="${title}">Dashboard</h1>
+                </div>
+                <div class="top-bar-right">
+                    <span class="user-info" th:text="${#authentication.name}">User</span>
+                    <a th:href="@{/auth/logout}" class="btn-icon" title="Đăng xuất">🚪</a>
+                </div>
+            </header>
+
+            <div th:replace="~{common/alerts :: alerts}"></div>
+
+            <div class="content-body" th:replace="${content}">
+                <!-- Content goes here -->
+            </div>
+        </main>
+    </div>
+
+    <script th:src="@{/js/ui-interactions.js}"></script>
+</body>
+</html>
+</html>

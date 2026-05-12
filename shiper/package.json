@@ -1,0 +1,16 @@
+{
+  "name": "shipnhanh",
+  "version": "1.0.0",
+  "description": "ShipNhanh - Giao hàng nội thành",
+  "main": "_worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "pages:dev": "npx wrangler pages dev",
+    "pages:deploy": "npx wrangler pages deploy ."
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

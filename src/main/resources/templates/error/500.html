@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/head :: head('500 - Lỗi hệ thống')}"></head>
+<body class="error-page">
+    <div class="error-container">
+        <div class="error-code">500</div>
+        <h1>Lỗi hệ thống</h1>
+        <p th:if="${error}" th:text="${error}">Đã có lỗi xảy ra. Vui lòng thử lại sau.</p>
+        <a th:href="@{/}" class="btn btn-primary">Về trang chủ</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShipHola – Giao hàng nội thành</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/public-landing.css}">
+</head>
+<body>
+
+<!-- ALERTS -->
+<div th:if="${success}" style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 16px 24px; background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; border-radius: 8px; font-weight: 500;">
+  <span th:text="${success}">Success</span>
+</div>
+<div th:if="${error}" style="position: fixed; top: 80px; right: 20px; z-index: 1000; padding: 16px 24px; background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; border-radius: 8px; font-weight: 500;">
+  <span th:text="${error}">Error</span>
+</div>
+
+<!-- NAV -->
+<nav class="public-nav">
+  <a th:href="@{/}" class="public-nav-logo">
+    <span class="logo-dot"></span>ShipHola
+  </a>
+  <ul class="public-nav-links">
+    <li><a href="#services">Dịch vụ</a></li>
+    <li><a href="#order">Đặt đơn</a></li>
+    <li><a href="#query">Tra cứu</a></li>
+    <li><a href="#contact">Liên hệ</a></li>
+  </ul>
+  <div class="public-nav-right">
+    <a th:href="@{/auth/register}" class="public-nav-cta">Đăng ký shipper</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="public-hero">
+  <div class="public-hero-bar"></div>
+  <div class="public-hero-inner">
+    <div>
+      <div class="public-eyebrow public-fade">
+        <span class="public-eyebrow-bar"></span>Đang hoạt động · Nội thành
+      </div>
+      <h1 class="public-hero-title public-fade">
+        Ship nhanh.<br/>
+        <em>Đúng hẹn.</em><br/>
+        <span class="muted">Giá rõ ràng.</span>
+      </h1>
+      <p class="public-hero-desc public-fade">
+        Giao hàng, mua hộ, đón xe buýt, lái xe hộ — tất cả dịch vụ trong một số điện thoại. Đặt đơn online, nhận ngay trong ít phút.
+      </p>
+      <div class="public-hero-btns public-fade">
+        <a href="#order" class="public-btn-dark">Đặt ship ngay</a>
+        <a href="#query" class="public-btn-line">Tra cứu đơn hàng</a>
+      </div>
+      <div class="public-hero-hl public-fade">
+        <div class="public-hl-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(224,124,0,0.75)" stroke-width="2" stroke-linecap="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.1 2.18C.1 1.1.99.1 2.08.1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="public-hl-lbl">Hotline đặt hàng</div>
+          <a href="tel:0909123456" class="public-hl-num">0909 123 456</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="public-fade" id="pricing">
+      <div class="public-price-card">
+        <div class="public-price-card-label">BẢNG GIÁ</div>
+        <table class="public-ptable">
+          <tr><td class="km">Dưới 1,5 km</td><td class="fee">12.000 đ</td></tr>
+          <tr><td class="km">1,5 — 4 km</td><td class="fee">15.000 đ</td></tr>
+          <tr><td class="km">4 — 5 km</td><td class="fee">18.000 đ</td></tr>
+          <tr><td class="km">5 — 6 km</td><td class="fee">20.000 đ</td></tr>
+          <tr><td class="km">6 — 7 km</td><td class="fee">25.000 đ</td></tr>
+          <tr><td class="km">Trên 7 km</td><td class="fee deal">Thỏa thuận</td></tr>
+          <tr><td class="km">Mua hộ</td><td class="fee">20.000 đ</td></tr>
+          <tr><td class="km">Gửi / nhận xe buýt</td><td class="fee">20.000 đ</td></tr>
+        </table>
+        <div class="public-psurcharge">
+          <span class="sl">Phụ phí mưa gió</span>
+          <span class="sv">+ 5.000 đ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="public-stats-strip">
+  <div class="public-stat-wrap">
+    <div class="public-stat">
+      <div class="public-stat-num" data-count="1200" data-suffix="+">0</div>
+      <div class="public-stat-lbl">Đơn đã giao</div>
+    </div>
+    <div class="public-stat">
+      <div class="public-stat-num" data-count="30" data-suffix="'">0</div>
+      <div class="public-stat-lbl">Thời gian giao TB</div>
+    </div>
+    <div class="public-stat">
+      <div class="public-stat-num" data-count="98" data-suffix="%">0</div>
+      <div class="public-stat-lbl">Khách hài lòng</div>
+    </div>
+    <div class="public-stat">
+      <div class="public-stat-num" data-static="24/7">24/7</div>
+      <div class="public-stat-lbl">Hỗ trợ liên tục</div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="public-ticker" aria-hidden="true">
+  <div class="public-t-track">
+    <div class="public-t-item">Giao nhanh nội thành <span class="public-t-sep"></span></div>
+    <div class="public-t-item">Mua hộ 20.000 đ <span class="public-t-sep"></span></div>
+    <div class="public-t-item">Đón hàng xe buýt <span class="public-t-sep"></span></div>
+    <div class="public-t-item">Lái xe hộ theo yêu cầu <span class="public-t-sep"></span></div>
+    <div class="public-t-item">Theo dõi đơn thời gian thực <span class="public-t-sep"></span></div>
+    <div class="public-t-item">Hotline 24/7 <span class="public-t-sep"></span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="public-services" id="services">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="public-sec-head public-fade">
+      <div class="public-stag">Dịch vụ</div>
+      <h2 class="public-stit">Tất cả trong <em style="color:var(--ship-green)">một nơi</em></h2>
+      <p class="public-ssub">Từ giao hàng đến mua hộ, chúng tôi phục vụ mọi nhu cầu sinh hoạt hàng ngày của bạn.</p>
+    </div>
+    <div class="public-svc-grid public-fade">
+      <div class="public-svc">
+        <div class="public-svc-n">01</div>
+        <div class="public-svc-nm">Ship hàng nhanh</div>
+        <div class="public-svc-dc">Giao hàng nội thành siêu tốc, đúng giờ, an toàn. Theo dõi trạng thái đơn hàng theo thời gian thực.</div>
+        <div class="public-svc-pr">Từ 12.000 đ</div>
+      </div>
+      <div class="public-svc">
+        <div class="public-svc-n">02</div>
+        <div class="public-svc-nm">Mua hộ</div>
+        <div class="public-svc-dc">Không cần ra ngoài. Chúng tôi đi mua và giao tận tay mọi món hàng bạn cần.</div>
+        <div class="public-svc-pr">20.000 đ</div>
+      </div>
+      <div class="public-svc">
+        <div class="public-svc-n">03</div>
+        <div class="public-svc-nm">Gửi / nhận xe buýt</div>
+        <div class="public-svc-dc">Đón hàng từ bến xe buýt hoặc gửi hàng đi tỉnh nhanh chóng, không lo thất lạc.</div>
+        <div class="public-svc-pr">20.000 đ</div>
+      </div>
+      <div class="public-svc">
+        <div class="public-svc-n">04</div>
+        <div class="public-svc-nm">Lái xe hộ / Xe ôm / Taxi</div>
+        <div class="public-svc-dc">Cần tài xế đưa đón? Gọi ngay, chúng tôi có mặt trong thời gian ngắn nhất.</div>
+        <div class="public-svc-pr">Liên hệ báo giá</div>
+      </div>
+      <div class="public-svc">
+        <div class="public-svc-n">05</div>
+        <div class="public-svc-nm">Nhận chuyển khoản / Rút tiền</div>
+        <div class="public-svc-dc">Hỗ trợ nhận chuyển khoản, rút tiền mặt tiện lợi theo yêu cầu.</div>
+        <div class="public-svc-pr">Liên hệ báo giá</div>
+      </div>
+      <div class="public-svc public-svc-dark">
+        <div class="public-svc-n">—</div>
+        <div class="public-svc-nm">Cần tư vấn thêm?</div>
+        <div class="public-svc-dc">Gọi hotline hoặc nhắn Zalo, chúng tôi phản hồi trong vài phút.</div>
+        <a href="tel:0909xxxxxx" class="public-btn-cta">Gọi ngay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section class="public-order-sec" id="order">
+  <div class="public-order-inner">
+    <div class="public-fade">
+      <div class="public-stag public-order-stag">Đặt đơn</div>
+      <h2 class="public-stit public-order-stit">Chỉ cần <em>60 giây</em></h2>
+      <p class="public-ssub">Không cần gọi điện, không cần chờ đợi. Điền form và chúng tôi xác nhận ngay.</p>
+      <div class="public-steps">
+        <div class="public-step">
+          <div class="public-step-no">01</div>
+          <div>
+            <h4>Chọn dịch vụ và điền địa chỉ</h4>
+            <p>Nhập điểm lấy và giao hàng, hệ thống tự tính phí tạm tính ngay lập tức.</p>
+          </div>
+        </div>
+        <div class="public-step">
+          <div class="public-step-no">02</div>
+          <div>
+            <h4>Xác nhận đơn hàng</h4>
+            <p>Kiểm tra thông tin và xác nhận. Mã đơn được sinh ra tự động.</p>
+          </div>
+        </div>
+        <div class="public-step">
+          <div class="public-step-no">03</div>
+          <div>
+            <h4>Shipper đến lấy và giao hàng</h4>
+            <p>Theo dõi trạng thái đơn theo thời gian thực cho đến khi giao thành công.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form class="public-oform public-fade" id="orderForm">
+      <div class="public-oform-title">Tạo đơn ship mới</div>
+
+      <!-- Step 1: Tính giá cước -->
+      <div id="step1">
+        <div class="public-step-indicator">
+          <span class="step-active">1. Tính giá cước</span>
+          <span class="step-separator">→</span>
+          <span>2. Xác nhận</span>
+        </div>
+
+        <div class="public-fg">
+          <label>Loại dịch vụ</label>
+          <select id="serviceType" required>
+            <option value="DELIVERY">Ship hàng</option>
+            <option value="BUY_FOR">Mua hộ</option>
+            <option value="BUS_PICKUP">Gửi / nhận xe buýt</option>
+            <option value="DRIVER_HELP">Lái xe hộ / Xe ôm</option>
+          </select>
+        </div>
+
+        <div class="public-fg">
+          <label>Điểm lấy hàng</label>
+          <div class="public-input-group">
+            <input type="text" id="pickupAddress"
+              placeholder="Ví dụ: 123 Nguyễn Trãi, P. Bến Nghé, Q.1, TP.HCM"
+              pattern=".{10,}"
+              title="Địa chỉ phải có ít nhất 10 ký tự"
+              required/>
+            <button type="button" class="public-btn-loc" id="btnGetLocation" title="Lấy vị trí hiện tại">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <small style="color: var(--ship-gray); font-size: 0.65rem; margin-top: 4px; display: block;">
+            Nhấn nút 📍 để lấy vị trí (khuyên dùng điện thoại) hoặc nhập thủ công
+          </small>
+        </div>
+
+        <div class="public-fg">
+          <label>Điểm giao hàng</label>
+          <input type="text" id="deliveryAddress"
+            placeholder="Ví dụ: 456 Lê Duẩn, P. Bến Thành, Q.1, TP.HCM"
+            pattern=".{10,}"
+            title="Địa chỉ phải có ít nhất 10 ký tự"
+            required/>
+          <small style="color: var(--ship-gray); font-size: 0.65rem; margin-top: 4px; display: block;">
+            Format: Số nhà, Tên đường, Phường/Xã, Quận/Huyện
+          </small>
+        </div>
+
+        <div class="public-fg">
+          <label>Phụ phí mưa gió</label>
+          <select id="surcharge">
+            <option value="0">Không (trời bình thường)</option>
+            <option value="5000">Có — thêm 5.000 đ</option>
+          </select>
+        </div>
+
+        <button type="button" class="public-btn-sub" id="btnCalculateFee">Tính giá cước</button>
+      </div>
+
+      <!-- Loading state -->
+      <div id="loadingState" style="display: none; text-align: center; padding: 20px;">
+        <div class="public-spinner"></div>
+        <p style="margin-top: 12px; color: var(--ship-gray);">Đang tính khoảng cách...</p>
+      </div>
+
+      <!-- Step 2: Xác nhận đặt đơn -->
+      <div id="step2" style="display: none;">
+        <div class="public-step-indicator">
+          <span style="color: var(--ship-green);">✓ 1. Tính giá cước</span>
+          <span class="step-separator">→</span>
+          <span class="step-active">2. Xác nhận</span>
+        </div>
+
+        <div class="public-fee-result">
+          <div class="public-fee-summary">
+            <div class="public-fee-item">
+              <span class="public-fee-item-label">Khoảng cách</span>
+              <span class="public-fee-item-value" id="resultDistance">— km</span>
+            </div>
+            <div class="public-fee-item">
+              <span class="public-fee-item-label">Thời gian ước tính</span>
+              <span class="public-fee-item-value" id="resultDuration">— phút</span>
+            </div>
+            <div class="public-fee-item">
+              <span class="public-fee-item-label">Phí ship</span>
+              <span class="public-fee-item-value" id="resultFee">— đ</span>
+            </div>
+            <div class="public-fee-total">
+              <span>Tổng phí</span>
+              <span id="resultTotal">— đ</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="public-fg-row">
+          <div class="public-fg">
+            <label>SĐT người gửi</label>
+            <input type="tel" id="senderPhone" placeholder="09xx xxx xxx" required/>
+          </div>
+          <div class="public-fg">
+            <label>SĐT người nhận</label>
+            <input type="tel" id="receiverPhone" placeholder="09xx xxx xxx" required/>
+          </div>
+        </div>
+
+        <div class="public-fg">
+          <label>Ghi chú</label>
+          <input type="text" id="note" placeholder="Hàng dễ vỡ, gọi trước khi đến..."/>
+        </div>
+
+        <div class="public-btn-row">
+          <button type="button" class="public-btn-back" id="btnBack">Quay lại</button>
+          <button type="button" class="public-btn-sub" id="btnConfirmOrder">Xác nhận đặt đơn</button>
+        </div>
+      </div>
+
+      <!-- Success state -->
+      <div id="successState" style="display: none; text-align: center; padding: 32px 16px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">✓</div>
+        <h3 style="color: var(--ship-green); margin-bottom: 8px;">Đơn hàng đã được ghi nhận!</h3>
+        <p style="color: var(--ship-gray); margin-bottom: 16px;">Mã tracking của bạn:</p>
+        <div style="font-size: 24px; font-weight: 900; color: var(--ship-amber); margin-bottom: 16px;" id="trackingNumber">SHXXXXXXXXX</div>
+        <p style="color: var(--ship-gray); margin-bottom: 8px;">Chúng tôi sẽ gọi xác nhận trong <strong>5 phút</strong>.</p>
+        <p style="margin-bottom: 24px;">Hoặc gọi hotline để được phục vụ ngay:</p>
+        <a href="tel:0909123456" class="public-btn-dark" style="display: inline-block;">0909 123 456</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="public-hiw" id="hiw">
+  <div class="public-hiw-inner">
+    <div class="public-sec-head public-fade">
+      <div class="public-stag">Quy trình</div>
+      <h2 class="public-stit">Đơn giản — <em>Nhanh chóng</em></h2>
+    </div>
+    <div class="public-hiw-grid public-fade">
+      <div class="public-hiw-s">
+        <div class="public-hiw-n">01</div>
+        <h4>Đặt đơn online</h4>
+        <p>Điền form hoặc gọi hotline, đơn được tạo ngay lập tức</p>
+      </div>
+      <div class="public-hiw-s">
+        <div class="public-hiw-n">02</div>
+        <h4>Xác nhận và phân công</h4>
+        <p>Hệ thống tính phí, shipper phù hợp được phân công tự động</p>
+      </div>
+      <div class="public-hiw-s">
+        <div class="public-hiw-n">03</div>
+        <h4>Shipper lấy hàng</h4>
+        <p>Shipper đến điểm lấy và cập nhật trạng thái liên tục</p>
+      </div>
+      <div class="public-hiw-s">
+        <div class="public-hiw-n">04</div>
+        <h4>Giao thành công</h4>
+        <p>Hàng đến tay người nhận, đơn hoàn tất và xác nhận</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUERY BAR -->
+<div class="public-qbar" id="query">
+  <p>Tra cứu đơn hàng:</p>
+  <div class="public-qwrap">
+    <form th:action="@{/public/search}" method="get" style="display: flex; gap: 8px; flex: 1;">
+      <input type="text" name="keyword" placeholder="Nhập mã đơn hoặc số điện thoại..." style="flex: 1;"/>
+      <button type="submit">Tra cứu</button>
+    </form>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="public-testi">
+  <div class="public-testi-inner">
+    <div class="public-sec-head public-fade">
+      <div class="public-stag">Đánh giá</div>
+      <h2 class="public-stit">Khách hàng <em style="color:var(--ship-green)">nói gì</em></h2>
+    </div>
+    <div class="public-tgrid public-fade">
+      <div class="public-tcard">
+        <div class="public-stars">
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+        </div>
+        <p class="public-ttext">Ship nhanh, đúng giờ. Mình hay đặt mua hộ cơm trưa và giao hàng, chưa bao giờ trễ. Phí hợp lý hơn nhiều so với các ứng dụng lớn.</p>
+        <div class="public-tauthor">
+          <div class="public-tav">H</div>
+          <div>
+            <div class="public-tname">Chị Hương</div>
+            <div class="public-tloc">Phường 5, TP. Local</div>
+          </div>
+        </div>
+      </div>
+      <div class="public-tcard">
+        <div class="public-stars">
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+        </div>
+        <p class="public-ttext">Trời mưa vẫn giao, chỉ thêm 5.000 đồng thôi. Shipper rất nhiệt tình, gọi báo trước khi đến. Sẽ ủng hộ dài dài!</p>
+        <div class="public-tauthor">
+          <div class="public-tav">M</div>
+          <div>
+            <div class="public-tname">Anh Minh</div>
+            <div class="public-tloc">Phường 8, TP. Local</div>
+          </div>
+        </div>
+      </div>
+      <div class="public-tcard">
+        <div class="public-stars">
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star"></span>
+          <span class="public-star off"></span>
+        </div>
+        <p class="public-ttext">Dịch vụ đón hàng xe buýt rất tiện. Mình gửi đồ từ Sài Gòn về, nhắn tin là có người ra bến đón ngay, không lo thất lạc.</p>
+        <div class="public-tauthor">
+          <div class="public-tav">T</div>
+          <div>
+            <div class="public-tname">Em Trang</div>
+            <div class="public-tloc">Gần bến xe, TP. Local</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT CTA SECTION -->
+<section class="public-contact-cta">
+  <div class="public-contact-cta-inner">
+    <div class="public-contact-main">
+      <div class="public-contact-badge">LIÊN HỆ ĐẶT HÀNG</div>
+      <h2 class="public-contact-title">Gọi ngay — <em>Shipper có mặt</em> trong 15 phút</h2>
+      <p class="public-contact-desc">
+        Giao hàng, mua hộ, gửi xe buýt, lái xe hộ — mọi dịch vụ chỉ qua một cuộc gọi. Hoặc đặt đơn online nhanh gọn lẹ.
+      </p>
+
+      <div class="public-contact-channels">
+        <a href="tel:0909123456" class="public-contact-call">
+          <div class="call-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.1 2.18C.1 1.1.99.1 2.08.1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/>
+            </svg>
+          </div>
+          <div class="call-info">
+            <div class="call-label">Hotline 24/7</div>
+            <div class="call-number">0909 123 456</div>
+          </div>
+          <div class="call-arrow">→</div>
+        </a>
+
+        <a href="#order" class="public-contact-online">
+          <div class="online-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 3v18"/>
+              <path d="M15 3v18"/>
+              <path d="M3 9h18"/>
+              <path d="M3 15h18"/>
+            </svg>
+          </div>
+          <div class="online-info">
+            <div class="online-label">Đặt đơn online</div>
+            <div class="online-desc">Điền form — Nhận mã ngay</div>
+          </div>
+          <div class="online-arrow">→</div>
+        </a>
+
+        <div class="public-contact-social">
+          <div class="social-label">Hoặc nhắn tin:</div>
+          <div class="social-links">
+            <a href="#" class="social-link">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+              </svg>
+              Zalo
+            </a>
+            <a href="#" class="social-link">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.145 2 11.25c0 2.97 1.515 5.614 3.858 7.36-.142.905-.423 2.156-.99 3.656 1.61-.21 3.08-.705 4.386-1.445.576.085 1.164.135 1.764.135 5.523 0 10-4.145 10-9.25S17.523 2 12 2zm0 14c-3.145 0-5.895-1.405-7.426-3.525.18.045.375.065.57.065 3.03 0 5.5-2.245 5.5-5 0-.18-.015-.36-.045-.535C11.395 6.99 13.145 6 15 6c3.315 0 6 2.46 6 5.5s-2.685 5.5-6 5.5H12z"/>
+              </svg>
+              Messenger
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="public-contact-side">
+      <div class="shipper-cta-mini">
+        <div class="shipper-mini-badge">TUYỂN DỤNG</div>
+        <div class="shipper-mini-icon">🛵</div>
+        <h4>Bạn muốn kiếm tiền?</h4>
+        <p>Đăng ký làm Shipper — thu nhập 5-10 triệu/tháng, thời gian làm việc linh hoạt</p>
+        <a th:href="@{/auth/register}" class="shipper-mini-btn">Đăng ký ngay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="public-footer" id="contact">
+  <div class="public-fgrid">
+    <div class="public-fbrand">
+      <a th:href="@{/}" class="public-flogo"><span class="dot"></span>ShipHola</a>
+      <p>Dịch vụ ship địa phương uy tín, nhanh chóng, giá cả minh bạch. Phục vụ 24/7 trong toàn địa bàn thành phố.</p>
+    </div>
+    <div class="public-fcol">
+      <h5>Dịch vụ</h5>
+      <ul>
+        <li><a href="#order">Ship hàng</a></li>
+        <li><a href="#order">Mua hộ</a></li>
+        <li><a href="#order">Gửi xe buýt</a></li>
+        <li><a href="#order">Lái xe hộ</a></li>
+        <li><a href="#order">Chuyển khoản</a></li>
+      </ul>
+    </div>
+    <div class="public-fcol">
+      <h5>Hỗ trợ</h5>
+      <ul>
+        <li><a href="#order">Đặt đơn online</a></li>
+        <li><a href="#query">Tra cứu đơn</a></li>
+        <li><a href="#pricing">Bảng giá</a></li>
+        <li><a href="#">Câu hỏi thường gặp</a></li>
+        <li><a th:href="@{/auth/register}">Đăng ký làm shipper</a></li>
+      </ul>
+    </div>
+    <div class="public-fcol">
+      <h5>Đặt hàng nhanh</h5>
+      <ul class="public-fcontact">
+        <li>
+          <span class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.1 2.18C.1 1.1.99.1 2.08.1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/>
+            </svg>
+          </span>
+          <a href="tel:0909123456" class="public-phone-link">0909 123 456</a>
+        </li>
+        <li>
+          <span class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+            </svg>
+          </span>
+          <a href="https://zalo.me/0909123456" target="_blank">0909 123 456</a>
+        </li>
+        <li>
+          <span class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.145 2 11.25c0 2.97 1.515 5.614 3.858 7.36-.142.905-.423 2.156-.99 3.656 1.61-.21 3.08-.705 4.386-1.445.576.085 1.164.135 1.764.135 5.523 0 10-4.145 10-9.25S17.523 2 12 2z"/>
+            </svg>
+          </span>
+          <a href="https://m.me/shipholalocal" target="_blank">ShipHola Local</a>
+        </li>
+        <li>
+          <span class="contact-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </span>
+          24/7 mọi ngày
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script th:src="@{/js/public-landing.js}"></script>
+
+</body>
+</html>

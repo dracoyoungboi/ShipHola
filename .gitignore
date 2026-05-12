@@ -1,0 +1,100 @@
+# ==========================================
+# SHIPHOLA - GITIGNORE
+# ==========================================
+
+# ==========================================
+# JAVA / MAVEN
+# ==========================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# ==========================================
+# IDE - INTELLIJ IDEA
+# ==========================================
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+.idea_modules/
+
+# ==========================================
+# IDE - ECLIPSE
+# ==========================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+
+# ==========================================
+# IDE - VS CODE
+# ==========================================
+.vscode/
+*.code-workspace
+
+# ==========================================
+# IDE - NETBEANS
+# ==========================================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# ==========================================
+# SPRING BOOT / LOGS
+# ==========================================
+*.log
+logs/
+application-dev.properties
+application-local.properties
+
+# ==========================================
+# OPERATING SYSTEMS
+# ==========================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ==========================================
+# MEMORY / CLAUDE
+# ==========================================
+.claude/
+memory/
+
+# ==========================================
+# TEMP FILES
+# ==========================================
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+
+# ==========================================
+# BUILD
+# ==========================================
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<aside th:fragment="sidebar(role, active)" class="sidebar">
+    <div class="sidebar-header">
+        <div class="sidebar-logo">
+            <span class="logo-icon">🚚</span>
+            <span class="logo-text">ShipHola</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <ul class="sidebar-menu">
+            <li th:if="${role == 'ADMIN'}" th:class="${active == 'dashboard' ? 'active' : ''}">
+                <a th:href="@{/admin/dashboard}">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li th:if="${role == 'ADMIN'}" th:class="${active == 'packages' ? 'active' : ''}">
+                <a th:href="@{/admin/packages}">
+                    <span class="menu-icon">📦</span>
+                    <span class="menu-text">Đơn hàng</span>
+                </a>
+            </li>
+            <li th:if="${role == 'ADMIN'}" th:class="${active == 'users' ? 'active' : ''}">
+                <a th:href="@{/admin/users}">
+                    <span class="menu-icon">👥</span>
+                    <span class="menu-text">Người dùng</span>
+                </a>
+            </li>
+            <li th:if="${role == 'ADMIN'}" th:class="${active == 'subscriptions' ? 'active' : ''}">
+                <a th:href="@{/admin/subscriptions}">
+                    <span class="menu-icon">💳</span>
+                    <span class="menu-text">Gói dịch vụ</span>
+                </a>
+            </li>
+
+            <li th:if="${role == 'DISPATCHER'}" th:class="${active == 'dashboard' ? 'active' : ''}">
+                <a th:href="@{/dispatcher/dashboard}">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li th:if="${role == 'DISPATCHER'}" th:class="${active == 'pending' ? 'active' : ''}">
+                <a th:href="@{/dispatcher/packages/pending}">
+                    <span class="menu-icon">⏳</span>
+                    <span class="menu-text">Đơn chờ xử lý</span>
+                </a>
+            </li>
+            <li th:if="${role == 'DISPATCHER'}" th:class="${active == 'assigned' ? 'active' : ''}">
+                <a th:href="@{/dispatcher/packages/assigned}">
+                    <span class="menu-icon">✅</span>
+                    <span class="menu-text">Đơn đã giao</span>
+                </a>
+            </li>
+
+            <li th:if="${role == 'SHIPPER'}" th:class="${active == 'dashboard' ? 'active' : ''}">
+                <a th:href="@{/shipper/dashboard}">
+                    <span class="menu-icon">📊</span>
+                    <span class="menu-text">Dashboard</span>
+                </a>
+            </li>
+            <li th:if="${role == 'SHIPPER'}" th:class="${active == 'packages' ? 'active' : ''}">
+                <a th:href="@{/shipper/packages}">
+                    <span class="menu-icon">📦</span>
+                    <span class="menu-text">Đơn của tôi</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+        <a th:href="@{/auth/logout}" class="btn-logout-sidebar">
+            <span class="menu-icon">🚪</span>
+            <span class="menu-text">Đăng xuất</span>
+        </a>
+    </div>
+</aside>
+</html>

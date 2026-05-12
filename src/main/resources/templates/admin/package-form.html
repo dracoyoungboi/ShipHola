@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Tạo đơn hàng', ~{::content}, 'ADMIN', 'packages')}">
+<body>
+<div th:fragment="content">
+    <form th:action="@{/admin/packages/create}" th:object="${createPackageDTO}" method="post" class="form">
+        <div class="form-section">
+            <h3>Thông tin gói hàng</h3>
+            <div class="form-group">
+                <label for="packageName">Tên gói hàng *</label>
+                <input type="text" id="packageName" th:field="*{packageName}" class="form-control" required>
+                <span class="error" th:if="${#fields.hasErrors('packageName')}" th:errors="*{packageName}"></span>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="weight">Trọng lượng (kg) *</label>
+                    <input type="number" id="weight" th:field="*{weight}" step="0.1" min="0.1" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryType">Loại giao hàng *</label>
+                    <select id="deliveryType" th:field="*{deliveryType}" class="form-control" required>
+                        <option value="">Chọn loại</option>
+                        <option value="STANDARD">Tiêu chuẩn (3 ngày)</option>
+                        <option value="EXPRESS">Hỏa tốc (1 ngày)</option>
+                        <option value="SAME_DAY">Trong ngày (6 tiếng)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="deliveryArea">Khu vực giao *</label>
+                <select id="deliveryArea" th:field="*{deliveryArea}" class="form-control" required>
+                    <option value="">Chọn khu vực</option>
+                    <option value="NORTH">Miền Bắc</option>
+                    <option value="SOUTH">Miền Nam</option>
+                    <option value="EAST">Miền Đông</option>
+                    <option value="WEST">Miền Tây</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Thông tin người gửi</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="senderName">Họ tên *</label>
+                    <input type="text" id="senderName" th:field="*{senderName}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="senderPhone">SĐT *</label>
+                    <input type="tel" id="senderPhone" th:field="*{senderPhone}" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="senderAddress">Địa chỉ *</label>
+                <input type="text" id="senderAddress" th:field="*{senderAddress}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Thông tin người nhận</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="receiverName">Họ tên *</label>
+                    <input type="text" id="receiverName" th:field="*{receiverName}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="receiverPhone">SĐT *</label>
+                    <input type="tel" id="receiverPhone" th:field="*{receiverPhone}" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="receiverAddress">Địa chỉ *</label>
+                <input type="text" id="receiverAddress" th:field="*{receiverAddress}" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Thông tin thêm</h3>
+            <div class="form-group">
+                <label for="packageContent">Nội dung gói hàng</label>
+                <textarea id="packageContent" th:field="*{packageContent}" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="specialInstructions">Hướng dẫn đặc biệt</label>
+                <textarea id="specialInstructions" th:field="*{specialInstructions}" class="form-control" rows="2"></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Tạo đơn hàng</button>
+            <a th:href="@{/admin/packages}" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tra cứu đơn hàng - ShipHola</title>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/public-landing.css}">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div th:replace="~{public/navbar :: navbar}"></div>
+
+<!-- SEARCH RESULT SECTION -->
+<section class="public-order-sec" style="min-height: 60vh;">
+  <div class="public-order-inner" style="grid-template-columns: 1fr;">
+    <div>
+      <div class="public-stag">Tra cứu</div>
+      <h2 class="public-stit">Kết quả cho: <em th:text="${keyword}">keyword</em></h2>
+      <p class="public-ssub" th:text="${#lists.size(packages)} + ' đơn hàng được tìm thấy'">0 đơn hàng được tìm thấy</p>
+
+      <div class="public-svc-grid" style="margin-top: 32px; grid-template-columns: 1fr;">
+        <th:block th:if="${#lists.isEmpty(packages)}">
+          <div style="text-align: center; padding: 40px; color: var(--ship-gray);">
+            <p>Không tìm thấy đơn hàng nào.</p>
+            <p style="margin-top: 16px;">
+              <a th:href="@{/public/landing}" class="public-btn-line">Quay lại trang chủ</a>
+            </p>
+          </div>
+        </th:block>
+
+        <th:block th:each="pkg : ${packages}">
+          <div class="public-oform">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+              <div>
+                <div style="font-size: 0.7rem; color: var(--ship-gray); letter-spacing: 1px;">Mã tracking</div>
+                <div style="font-size: 1.1rem; font-weight: 900; color: var(--ship-amber);" th:text="${pkg.trackingNumber}">SH123456789</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.7rem; color: var(--ship-gray); letter-spacing: 1px;">Trạng thái</div>
+                <div style="font-size: 0.9rem; font-weight: 700;" th:class="${pkg.status == 'DELIVERED' ? 'text-success' : 'text-warning'}" th:text="${#strings.arrayReplace(pkg.status, '_', ' ')}">PENDING</div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--ship-border); padding-top: 16px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; font-size: 0.85rem;">
+                <div>
+                  <div style="color: var(--ship-gray); font-size: 0.7rem;">Người gửi</div>
+                  <div th:text="${pkg.senderName}">Người gửi</div>
+                  <div style="color: var(--ship-gray);" th:text="${pkg.senderPhone}">09xx xxx xxx</div>
+                </div>
+                <div>
+                  <div style="color: var(--ship-gray); font-size: 0.7rem;">Người nhận</div>
+                  <div th:text="${pkg.receiverName}">Người nhận</div>
+                  <div style="color: var(--ship-gray);" th:text="${pkg.receiverPhone}">09xx xxx xxx</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--ship-border); padding-top: 16px; margin-top: 16px; font-size: 0.85rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <div>
+                  <div style="color: var(--ship-gray); font-size: 0.7rem;">Điểm lấy</div>
+                  <div th:text="${pkg.senderAddress}">Địa chỉ lấy</div>
+                </div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 12px;">
+                <div>
+                  <div style="color: var(--ship-gray); font-size: 0.7rem;">Điểm giao</div>
+                  <div th:text="${pkg.receiverAddress}">Địa chỉ giao</div>
+                </div>
+              </div>
+            </div>
+
+            <div style="border-top: 1px solid var(--ship-border); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <div style="color: var(--ship-gray); font-size: 0.7rem;">Phí ship</div>
+                <div style="font-size: 1.2rem; font-weight: 900; color: var(--ship-ink);" th:text="${#numbers.formatInteger(pkg.shippingFee, 3)} + ' đ'">15.000 đ</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="color: var(--ship-gray); font-size: 0.7rem;">Ngày đặt</div>
+                <div th:text="${#temporals.format(pkg.createdAt, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:30</div>
+              </div>
+            </div>
+          </div>
+        </th:block>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div th:replace="~{public/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShipNhanh – Giao hàng nội thành</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:     #1c1c1e;
+  --ink2:    #3a3a3c;
+  --gray:    #8e8e93;
+  --border:  #e5e5ea;
+  --sand:    #faf9f6;
+  --cream:   #f5f3ee;
+  --white:   #ffffff;
+  --yellow:  #f0c419;
+  --amber:   #e07c00;
+  --green:   #1a7a3c;
+  --red:     #cc2a1a;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--white);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 5vw;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-size: 1.2rem; font-weight: 900; letter-spacing: -0.5px;
+  color: var(--ink); text-decoration: none;
+  display: flex; align-items: center; gap: 8px;
+}
+.logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--yellow);
+}
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  color: var(--gray); text-decoration: none;
+  font-size: 0.84rem; font-weight: 500;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+
+/* Video thumb */
+.nav-vid {
+  width: 160px; height: 36px; border-radius: 6px;
+  overflow: hidden; position: relative;
+  cursor: pointer; flex-shrink: 0;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.nav-vid video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.nav-vid-ov {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.nav-vid:hover .nav-vid-ov { background: rgba(0,0,0,0.04); }
+.play-ring {
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.9);
+  display: flex; align-items: center; justify-content: center;
+}
+.play-ring::after {
+  content: ''; margin-left: 2px;
+  border-style: solid;
+  border-width: 4px 0 4px 7px;
+  border-color: transparent transparent transparent rgba(255,255,255,0.9);
+}
+.nav-cta {
+  background: var(--ink); color: var(--white);
+  font-weight: 800; font-size: 0.82rem;
+  padding: 9px 20px; border-radius: 6px;
+  text-decoration: none; white-space: nowrap;
+  transition: background .2s;
+}
+.nav-cta:hover { background: var(--ink2); }
+
+/* ── VIDEO MODAL ── */
+#vmodal {
+  display: none; position: fixed; inset: 0; z-index: 999;
+  background: rgba(0,0,0,0.85);
+  align-items: center; justify-content: center;
+}
+#vmodal.open { display: flex; }
+.vmodal-inner { position: relative; width: min(900px,90vw); }
+#mvid { width: 100%; border-radius: 10px; display: block; }
+.vclose {
+  position: absolute; top: -38px; right: 0;
+  background: none; border: none; color: rgba(255,255,255,0.6);
+  font-size: 0.88rem; font-weight: 600; cursor: pointer;
+  font-family: 'Be Vietnam Pro', sans-serif;
+}
+.vclose:hover { color: #fff; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  background: var(--sand);
+  display: flex; align-items: center;
+  padding: 100px 5vw 80px;
+  position: relative; overflow: hidden;
+}
+/* subtle dot pattern */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: radial-gradient(circle, rgba(0,0,0,0.055) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+/* yellow accent bar top */
+.hero-bar {
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--yellow) 0%, var(--amber) 55%, transparent 100%);
+}
+.hero-inner {
+  position: relative; z-index: 2;
+  max-width: 1200px; width: 100%;
+  display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 72px;
+  align-items: center;
+}
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-bottom: 24px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--amber);
+}
+.eyebrow-bar { width: 26px; height: 2px; background: var(--amber); }
+
+.hero-title {
+  font-size: clamp(2.8rem, 6vw, 5.4rem);
+  font-weight: 900; line-height: 1.0;
+  color: var(--ink); letter-spacing: -2px;
+}
+.hero-title em { font-style: normal; color: var(--amber); }
+.hero-title .muted { color: rgba(28,28,30,0.28); }
+
+.hero-desc {
+  margin-top: 22px;
+  font-size: 1rem; color: var(--gray);
+  line-height: 1.8; max-width: 460px;
+}
+.hero-btns { margin-top: 34px; display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-dark {
+  background: var(--ink); color: var(--white);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 800; font-size: 0.92rem;
+  padding: 14px 30px; border-radius: 7px;
+  text-decoration: none; border: none; cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+.btn-dark:hover { background: var(--ink2); transform: translateY(-2px); }
+.btn-line {
+  background: transparent; color: var(--ink);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 500; font-size: 0.92rem;
+  padding: 14px 26px; border-radius: 7px;
+  border: 1.5px solid var(--border);
+  text-decoration: none; cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.btn-line:hover { border-color: var(--ink); background: var(--cream); }
+
+.hero-hl {
+  margin-top: 34px; padding-top: 34px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 14px;
+}
+.hl-ring {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1.5px solid rgba(224,124,0,0.35);
+  background: rgba(240,196,25,0.08);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.hl-ring svg { width: 17px; height: 17px; }
+.hl-lbl { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); }
+.hl-num { font-size: 1.1rem; font-weight: 900; color: var(--ink); letter-spacing: 0.5px; }
+
+/* Price card */
+.price-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 28px 22px;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+.price-card-label {
+  position: absolute; top: -1px; left: 24px;
+  background: var(--yellow); color: var(--ink);
+  font-size: 0.65rem; font-weight: 900; letter-spacing: 2px;
+  padding: 3px 12px; border-radius: 0 0 6px 6px;
+}
+.ptable { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.ptable tr { border-bottom: 1px solid var(--border); }
+.ptable tr:last-child { border-bottom: none; }
+.ptable td { padding: 10px 0; font-size: 0.86rem; vertical-align: middle; }
+.ptable .km { color: var(--gray); font-weight: 400; }
+.ptable .fee { text-align: right; font-weight: 800; color: var(--ink); }
+.ptable .fee.deal { color: var(--amber); }
+.psurcharge {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  font-size: 0.8rem;
+}
+.psurcharge .sl { color: var(--gray); }
+.psurcharge .sv { color: var(--red); font-weight: 700; }
+
+/* ── STATS STRIP ── */
+.stats-strip {
+  background: var(--yellow);
+  padding: 0 5vw;
+  display: flex; align-items: center; justify-content: center;
+}
+.stat-wrap {
+  max-width: 900px; width: 100%;
+  display: flex; justify-content: space-between;
+}
+.stat {
+  flex: 1; text-align: center; padding: 20px 16px;
+  position: relative;
+}
+.stat::after {
+  content: ''; position: absolute; right: 0; top: 25%; bottom: 25%;
+  width: 1px; background: rgba(0,0,0,0.12);
+}
+.stat:last-child::after { display: none; }
+.stat-num {
+  font-size: 1.9rem; font-weight: 900; color: var(--ink);
+  letter-spacing: -1px; line-height: 1;
+}
+.stat-lbl { font-size: 0.75rem; font-weight: 600; color: rgba(28,28,30,0.55); margin-top: 4px; }
+
+/* ── TICKER ── */
+.ticker {
+  background: var(--ink); height: 40px;
+  overflow: hidden; white-space: nowrap;
+  display: flex; align-items: center;
+}
+.t-track { display: inline-flex; animation: tick 22s linear infinite; }
+.t-item {
+  display: inline-flex; align-items: center; gap: 14px;
+  padding: 0 26px;
+  font-size: 0.76rem; font-weight: 800; letter-spacing: 1.5px;
+  text-transform: uppercase; color: rgba(255,255,255,0.6);
+}
+.t-sep { width: 3px; height: 3px; background: var(--yellow); border-radius: 50%; }
+@keyframes tick { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ── SECTION COMMON ── */
+.sec-head { max-width: 560px; margin-bottom: 52px; }
+.stag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.7rem; font-weight: 800; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--green); margin-bottom: 14px;
+}
+.stag::before { content: ''; width: 22px; height: 2px; background: currentColor; }
+.stit {
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  font-weight: 900; line-height: 1.1; letter-spacing: -1px;
+}
+.stit em { font-style: normal; }
+.ssub { margin-top: 12px; font-size: 0.92rem; color: var(--gray); line-height: 1.75; }
+
+/* ── SERVICES ── */
+.services { padding: 96px 5vw; background: var(--white); }
+.svc-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden;
+}
+.svc {
+  padding: 32px 26px;
+  border-right: 1.5px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
+  background: var(--white);
+  transition: background .22s, border-color .22s;
+}
+.svc:nth-child(3n) { border-right: none; }
+.svc:nth-last-child(-n+3) { border-bottom: none; }
+.svc:hover { background: var(--sand); }
+.svc:hover .svc-n { background: var(--yellow); color: var(--ink); }
+.svc-n {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--cream); color: var(--gray);
+  font-size: 0.72rem; font-weight: 900;
+  margin-bottom: 18px; transition: background .22s, color .22s;
+}
+.svc-nm { font-size: 0.98rem; font-weight: 800; margin-bottom: 8px; color: var(--ink); }
+.svc-dc { font-size: 0.83rem; color: var(--gray); line-height: 1.65; }
+.svc-pr { margin-top: 16px; font-size: 1.05rem; font-weight: 900; color: var(--ink); letter-spacing: -0.3px; }
+.svc-dark {
+  background: var(--cream) !important;
+}
+.svc-dark .svc-nm { color: var(--ink); }
+.svc-dark .svc-dc { color: var(--gray); }
+.btn-cta {
+  display: inline-block; margin-top: 18px;
+  background: var(--ink); color: var(--white);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 800; font-size: 0.82rem;
+  padding: 10px 18px; border-radius: 6px;
+  text-decoration: none; transition: background .2s;
+}
+.btn-cta:hover { background: var(--amber); }
+
+/* ── ORDER ── */
+.order-sec { padding: 96px 5vw; background: var(--cream); }
+.order-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px;
+  align-items: start;
+}
+.order-stag { color: var(--amber) !important; }
+.order-stag::before { background: var(--amber) !important; }
+.order-stit em { color: var(--amber) !important; }
+
+.steps { margin-top: 32px; display: flex; flex-direction: column; }
+.step {
+  display: flex; gap: 18px; padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+.step:last-child { border-bottom: none; }
+.step-no {
+  font-size: 0.68rem; font-weight: 900; letter-spacing: 1px;
+  color: var(--gray); padding-top: 3px; flex-shrink: 0; width: 22px;
+}
+.step h4 { font-size: 0.92rem; font-weight: 800; margin-bottom: 4px; color: var(--ink); }
+.step p { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+
+/* Form */
+.oform {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 34px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+}
+.oform-title {
+  font-size: 0.95rem; font-weight: 900; color: var(--ink);
+  margin-bottom: 24px; padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+.fg { margin-bottom: 14px; }
+.fg label {
+  display: block; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--gray); margin-bottom: 6px;
+}
+.fg input, .fg select {
+  width: 100%; padding: 11px 14px;
+  background: var(--sand);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 0.88rem; color: var(--ink); outline: none;
+  transition: border-color .2s, background .2s;
+  appearance: none;
+}
+.fg input::placeholder { color: #bbb; }
+.fg input:focus, .fg select:focus {
+  border-color: var(--ink); background: var(--white);
+}
+.fg-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fee-row {
+  display: flex; justify-content: space-between; align-items: center;
+  background: #fffbec; border: 1.5px solid rgba(240,196,25,0.4);
+  border-radius: 8px; padding: 12px 16px; margin: 14px 0;
+}
+.fee-lbl { font-size: 0.78rem; color: var(--gray); }
+.fee-val { font-size: 1.5rem; font-weight: 900; color: var(--ink); letter-spacing: -0.5px; }
+.btn-sub {
+  width: 100%; background: var(--yellow); color: var(--ink);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 900; font-size: 0.92rem;
+  padding: 14px; border: none; border-radius: 8px;
+  cursor: pointer; transition: background .2s, transform .15s;
+}
+.btn-sub:hover { background: var(--amber); color: var(--white); transform: translateY(-2px); }
+
+/* ── HOW IT WORKS ── */
+.hiw { padding: 96px 5vw; background: var(--sand); }
+.hiw-inner { max-width: 1100px; margin: 0 auto; }
+.hiw .stit { color: var(--ink); }
+.hiw .stit em { color: var(--amber) !important; }
+.hiw-grid {
+  margin-top: 56px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  position: relative;
+}
+.hiw-grid::before {
+  content: ''; position: absolute;
+  top: 19px; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, var(--yellow) 0%, rgba(240,196,25,0.15) 100%);
+}
+.hiw-s { text-align: center; padding: 0 14px; position: relative; z-index: 1; }
+.hiw-n {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  color: var(--amber); font-weight: 900; font-size: 0.82rem;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.hiw-s h4 { font-size: 0.88rem; font-weight: 800; color: var(--ink); margin-bottom: 8px; }
+.hiw-s p { font-size: 0.79rem; color: var(--gray); line-height: 1.6; }
+
+/* ── QUERY BAR ── */
+.qbar {
+  background: var(--yellow); padding: 26px 5vw;
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px; flex-wrap: wrap;
+}
+.qbar p { font-size: 0.88rem; font-weight: 800; color: var(--ink); white-space: nowrap; }
+.qwrap { display: flex; gap: 8px; flex: 1; max-width: 480px; }
+.qwrap input {
+  flex: 1; padding: 10px 14px;
+  border: 2px solid rgba(0,0,0,0.1); border-radius: 6px;
+  font-family: 'Be Vietnam Pro', sans-serif; font-size: 0.86rem;
+  background: rgba(255,255,255,0.75); outline: none;
+  transition: border-color .2s, background .2s;
+}
+.qwrap input:focus { background: var(--white); border-color: var(--ink); }
+.qwrap button {
+  background: var(--ink); color: var(--white);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-weight: 700; font-size: 0.84rem;
+  padding: 10px 20px; border: none; border-radius: 6px;
+  cursor: pointer; transition: background .2s; white-space: nowrap;
+}
+.qwrap button:hover { background: var(--ink2); }
+
+/* ── TESTIMONIALS ── */
+.testi { padding: 96px 5vw; background: var(--white); }
+.testi-inner { max-width: 1100px; margin: 0 auto; }
+.tgrid {
+  margin-top: 48px;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+}
+.tcard {
+  background: var(--sand); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px;
+  position: relative; overflow: hidden;
+}
+.tcard::before {
+  content: '\201C'; position: absolute;
+  top: -16px; right: 14px;
+  font-size: 7rem; line-height: 1;
+  color: rgba(0,0,0,0.05);
+  font-family: Georgia, serif;
+}
+.stars { display: flex; gap: 3px; margin-bottom: 12px; }
+.star { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); }
+.star.off { background: var(--border); }
+.ttext { font-size: 0.87rem; color: var(--ink2); line-height: 1.72; position: relative; z-index: 1; }
+.tauthor { margin-top: 18px; display: flex; align-items: center; gap: 10px; }
+.tav {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--yellow); color: var(--ink);
+  font-weight: 900; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.tname { font-size: 0.85rem; font-weight: 800; color: var(--ink); }
+.tloc { font-size: 0.74rem; color: var(--gray); margin-top: 2px; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--sand);
+  border-top: 1px solid var(--border);
+  padding: 60px 5vw 28px;
+}
+.fgrid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: 44px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid var(--border);
+}
+.flogo {
+  font-size: 1.1rem; font-weight: 900; color: var(--ink);
+  text-decoration: none; display: flex; align-items: center; gap: 7px;
+  margin-bottom: 14px;
+}
+.flogo .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--yellow); }
+.fbrand p { font-size: 0.83rem; color: var(--gray); line-height: 1.7; max-width: 250px; }
+.fcol h5 {
+  font-size: 0.68rem; font-weight: 800; letter-spacing: 2px;
+  text-transform: uppercase; color: #bbb; margin-bottom: 16px;
+}
+.fcol ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.fcol a { color: var(--gray); text-decoration: none; font-size: 0.84rem; transition: color .2s; }
+.fcol a:hover { color: var(--ink); }
+.fcontact li { font-size: 0.83rem; color: var(--gray); margin-bottom: 9px; display: flex; gap: 8px; }
+.fcontact li b { color: #c0c0c0; font-size: 0.68rem; font-weight: 800; letter-spacing: 1px; min-width: 22px; padding-top: 1px; }
+.fbot {
+  max-width: 1100px; margin: 0 auto; padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.76rem; color: #bbb;
+}
+.fsoc { display: flex; gap: 8px; }
+.soc {
+  width: 32px; height: 32px; border-radius: 6px;
+  border: 1px solid var(--border);
+  color: var(--gray); text-decoration: none;
+  font-size: 0.72rem; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .2s, color .2s, background .2s;
+}
+.soc:hover { border-color: var(--ink); color: var(--ink); background: var(--cream); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .price-card { display: none; }
+  .svc-grid { grid-template-columns: repeat(2, 1fr); }
+  .svc:nth-child(3n) { border-right: 1.5px solid var(--border); }
+  .svc:nth-child(2n) { border-right: none; }
+  .order-inner { grid-template-columns: 1fr; gap: 36px; }
+  .hiw-grid { grid-template-columns: repeat(2, 1fr); gap: 28px; }
+  .hiw-grid::before { display: none; }
+  .tgrid { grid-template-columns: 1fr; }
+  .fgrid { grid-template-columns: 1fr 1fr; }
+  .nav-links, .nav-vid { display: none; }
+  .stat-wrap { flex-wrap: wrap; }
+}
+@media (max-width: 600px) {
+  .svc-grid { grid-template-columns: 1fr; }
+  .fgrid { grid-template-columns: 1fr; }
+  .fg-row { grid-template-columns: 1fr; }
+}
+
+/* ── FADE IN ── */
+.fade { opacity: 0; transform: translateY(16px); transition: opacity .5s ease, transform .5s ease; }
+.fade.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="logo-dot"></span>ShipNhanh
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Dịch vụ</a></li>
+    <li><a href="#order">Đặt đơn</a></li>
+    <li><a href="#query">Tra cứu</a></li>
+    <li><a href="#contact">Liên hệ</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-vid" onclick="openVid()" title="Xem video giới thiệu">
+      <video src="https://assets.grab.com/wp-content/uploads/media/videos/IWD_hero_banner_desktop_2025.webm"
+             autoplay muted loop playsinline></video>
+      <div class="nav-vid-ov">
+        <div class="play-ring"></div>
+      </div>
+    </div>
+    <a href="#order" class="nav-cta">Đặt ship ngay</a>
+  </div>
+</nav>
+
+<!-- VIDEO MODAL -->
+<div id="vmodal">
+  <div class="vmodal-inner">
+    <button class="vclose" onclick="closeVid()">Đóng ✕</button>
+    <video id="mvid"
+           src="https://assets.grab.com/wp-content/uploads/media/videos/IWD_hero_banner_desktop_2025.webm"
+           controls></video>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bar"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow fade">
+        <span class="eyebrow-bar"></span>Đang hoạt động · Nội thành
+      </div>
+      <h1 class="hero-title fade">
+        Ship nhanh.<br>
+        <em>Đúng hẹn.</em><br>
+        <span class="muted">Giá rõ ràng.</span>
+      </h1>
+      <p class="hero-desc fade">
+        Giao hàng, mua hộ, đón xe buýt, lái xe hộ — tất cả dịch vụ trong một số điện thoại. Đặt đơn online, nhận ngay trong ít phút.
+      </p>
+      <div class="hero-btns fade">
+        <a href="#order" class="btn-dark">Đặt ship ngay</a>
+        <a href="#query" class="btn-line">Tra cứu đơn hàng</a>
+      </div>
+      <div class="hero-hl fade">
+        <div class="hl-ring">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(224,124,0,0.75)" stroke-width="2" stroke-linecap="round">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.1 2.18C.1 1.1.99.1 2.08.1h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="hl-lbl">Hotline 24/7</div>
+          <div class="hl-num">0909 xxx xxx</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fade" id="pricing">
+      <div class="price-card">
+        <div class="price-card-label">BẢNG GIÁ</div>
+        <table class="ptable">
+          <tr><td class="km">Dưới 1,5 km</td><td class="fee">12.000 đ</td></tr>
+          <tr><td class="km">1,5 — 4 km</td><td class="fee">15.000 đ</td></tr>
+          <tr><td class="km">4 — 5 km</td><td class="fee">18.000 đ</td></tr>
+          <tr><td class="km">5 — 6 km</td><td class="fee">20.000 đ</td></tr>
+          <tr><td class="km">6 — 7 km</td><td class="fee">25.000 đ</td></tr>
+          <tr><td class="km">Trên 7 km</td><td class="fee deal">Thỏa thuận</td></tr>
+          <tr><td class="km">Mua hộ</td><td class="fee">20.000 đ</td></tr>
+          <tr><td class="km">Gửi / nhận xe buýt</td><td class="fee">20.000 đ</td></tr>
+        </table>
+        <div class="psurcharge">
+          <span class="sl">Phụ phí mưa gió</span>
+          <span class="sv">+ 5.000 đ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat-wrap">
+    <div class="stat">
+      <div class="stat-num">1.200+</div>
+      <div class="stat-lbl">Đơn đã giao</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">30'</div>
+      <div class="stat-lbl">Thời gian giao TB</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">98%</div>
+      <div class="stat-lbl">Khách hài lòng</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">24/7</div>
+      <div class="stat-lbl">Hỗ trợ liên tục</div>
+    </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="t-track">
+    <div class="t-item">Giao nhanh nội thành <span class="t-sep"></span></div>
+    <div class="t-item">Mua hộ 20.000 đ <span class="t-sep"></span></div>
+    <div class="t-item">Đón hàng xe buýt <span class="t-sep"></span></div>
+    <div class="t-item">Lái xe hộ theo yêu cầu <span class="t-sep"></span></div>
+    <div class="t-item">Theo dõi đơn thời gian thực <span class="t-sep"></span></div>
+    <div class="t-item">Hotline 24/7 <span class="t-sep"></span></div>
+    <div class="t-item">Giao nhanh nội thành <span class="t-sep"></span></div>
+    <div class="t-item">Mua hộ 20.000 đ <span class="t-sep"></span></div>
+    <div class="t-item">Đón hàng xe buýt <span class="t-sep"></span></div>
+    <div class="t-item">Lái xe hộ theo yêu cầu <span class="t-sep"></span></div>
+    <div class="t-item">Theo dõi đơn thời gian thực <span class="t-sep"></span></div>
+    <div class="t-item">Hotline 24/7 <span class="t-sep"></span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div class="sec-head fade">
+      <div class="stag">Dịch vụ</div>
+      <h2 class="stit">Tất cả trong <em style="color:var(--green)">một nơi</em></h2>
+      <p class="ssub">Từ giao hàng đến mua hộ, chúng tôi phục vụ mọi nhu cầu sinh hoạt hàng ngày của bạn.</p>
+    </div>
+    <div class="svc-grid fade">
+      <div class="svc">
+        <div class="svc-n">01</div>
+        <div class="svc-nm">Ship hàng nhanh</div>
+        <div class="svc-dc">Giao hàng nội thành siêu tốc, đúng giờ, an toàn. Theo dõi trạng thái đơn hàng theo thời gian thực.</div>
+        <div class="svc-pr">Từ 12.000 đ</div>
+      </div>
+      <div class="svc">
+        <div class="svc-n">02</div>
+        <div class="svc-nm">Mua hộ</div>
+        <div class="svc-dc">Không cần ra ngoài. Chúng tôi đi mua và giao tận tay mọi món hàng bạn cần.</div>
+        <div class="svc-pr">20.000 đ</div>
+      </div>
+      <div class="svc">
+        <div class="svc-n">03</div>
+        <div class="svc-nm">Gửi / nhận xe buýt</div>
+        <div class="svc-dc">Đón hàng từ bến xe buýt hoặc gửi hàng đi tỉnh nhanh chóng, không lo thất lạc.</div>
+        <div class="svc-pr">20.000 đ</div>
+      </div>
+      <div class="svc">
+        <div class="svc-n">04</div>
+        <div class="svc-nm">Lái xe hộ / Xe ôm / Taxi</div>
+        <div class="svc-dc">Cần tài xế đưa đón? Gọi ngay, chúng tôi có mặt trong thời gian ngắn nhất.</div>
+        <div class="svc-pr">Liên hệ báo giá</div>
+      </div>
+      <div class="svc">
+        <div class="svc-n">05</div>
+        <div class="svc-nm">Nhận chuyển khoản / Rút tiền</div>
+        <div class="svc-dc">Hỗ trợ nhận chuyển khoản, rút tiền mặt tiện lợi theo yêu cầu.</div>
+        <div class="svc-pr">Liên hệ báo giá</div>
+      </div>
+      <div class="svc svc-dark">
+        <div class="svc-n">—</div>
+        <div class="svc-nm">Cần tư vấn thêm?</div>
+        <div class="svc-dc">Gọi hotline hoặc nhắn Zalo, chúng tôi phản hồi trong vài phút.</div>
+        <a href="tel:0909xxxxxx" class="btn-cta">Gọi ngay</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORDER -->
+<section class="order-sec" id="order">
+  <div class="order-inner">
+    <div class="fade">
+      <div class="stag order-stag">Đặt đơn</div>
+      <h2 class="stit order-stit">Chỉ cần <em>60 giây</em></h2>
+      <p class="ssub">Không cần gọi điện, không cần chờ đợi. Điền form và chúng tôi xác nhận ngay.</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-no">01</div>
+          <div>
+            <h4>Chọn dịch vụ và điền địa chỉ</h4>
+            <p>Nhập điểm lấy và giao hàng, hệ thống tự tính phí tạm tính ngay lập tức.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-no">02</div>
+          <div>
+            <h4>Xác nhận đơn hàng</h4>
+            <p>Kiểm tra thông tin và xác nhận. Mã đơn được sinh ra tự động.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-no">03</div>
+          <div>
+            <h4>Shipper đến lấy và giao hàng</h4>
+            <p>Theo dõi trạng thái đơn theo thời gian thực cho đến khi giao thành công.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="oform fade">
+      <div class="oform-title">Tạo đơn ship mới</div>
+      <div class="fg">
+        <label>Loại dịch vụ</label>
+        <select id="serviceType" onchange="updateFee()">
+          <option value="DELIVERY">Ship hàng</option>
+          <option value="BUY_FOR">Mua hộ</option>
+          <option value="BUS_PICKUP">Gửi / nhận xe buýt</option>
+          <option value="DRIVER_HELP">Lái xe hộ / Xe ôm</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Điểm lấy hàng</label>
+        <input type="text" placeholder="Nhập địa chỉ lấy hàng...">
+      </div>
+      <div class="fg">
+        <label>Điểm giao hàng</label>
+        <input type="text" placeholder="Nhập địa chỉ giao hàng...">
+      </div>
+      <div class="fg" id="distGrp">
+        <label>Khoảng cách ước tính (km)</label>
+        <input type="number" id="distInput" placeholder="Ví dụ: 3" min="0" step="0.5" oninput="updateFee()">
+      </div>
+      <div class="fg-row">
+        <div class="fg">
+          <label>SĐT người gửi</label>
+          <input type="tel" placeholder="09xx xxx xxx">
+        </div>
+        <div class="fg">
+          <label>SĐT người nhận</label>
+          <input type="tel" placeholder="09xx xxx xxx">
+        </div>
+      </div>
+      <div class="fg">
+        <label>Phụ phí mưa gió</label>
+        <select id="surcharge" onchange="updateFee()">
+          <option value="0">Không (trời bình thường)</option>
+          <option value="5000">Có — thêm 5.000 đ</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Ghi chú</label>
+        <input type="text" placeholder="Hàng dễ vỡ, gọi trước khi đến...">
+      </div>
+      <div class="fee-row">
+        <span class="fee-lbl">Phí tạm tính</span>
+        <span class="fee-val" id="feeVal">12.000 đ</span>
+      </div>
+      <button class="btn-sub" onclick="doOrder()">Xác nhận đặt đơn</button>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="hiw" id="hiw">
+  <div class="hiw-inner">
+    <div class="sec-head fade">
+      <div class="stag">Quy trình</div>
+      <h2 class="stit">Đơn giản — <em>Nhanh chóng</em></h2>
+    </div>
+    <div class="hiw-grid fade">
+      <div class="hiw-s">
+        <div class="hiw-n">01</div>
+        <h4>Đặt đơn online</h4>
+        <p>Điền form hoặc gọi hotline, đơn được tạo ngay lập tức</p>
+      </div>
+      <div class="hiw-s">
+        <div class="hiw-n">02</div>
+        <h4>Xác nhận và phân công</h4>
+        <p>Hệ thống tính phí, shipper phù hợp được phân công tự động</p>
+      </div>
+      <div class="hiw-s">
+        <div class="hiw-n">03</div>
+        <h4>Shipper lấy hàng</h4>
+        <p>Shipper đến điểm lấy và cập nhật trạng thái liên tục</p>
+      </div>
+      <div class="hiw-s">
+        <div class="hiw-n">04</div>
+        <h4>Giao thành công</h4>
+        <p>Hàng đến tay người nhận, đơn hoàn tất và xác nhận</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUERY BAR -->
+<div class="qbar" id="query">
+  <p>Tra cứu đơn hàng:</p>
+  <div class="qwrap">
+    <input type="text" placeholder="Nhập mã đơn hoặc số điện thoại...">
+    <button>Tra cứu</button>
+  </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="testi">
+  <div class="testi-inner">
+    <div class="sec-head fade">
+      <div class="stag">Đánh giá</div>
+      <h2 class="stit">Khách hàng <em style="color:var(--green)">nói gì</em></h2>
+    </div>
+    <div class="tgrid fade">
+      <div class="tcard">
+        <div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+        <p class="ttext">Ship nhanh, đúng giờ. Mình hay đặt mua hộ cơm trưa và giao hàng, chưa bao giờ trễ. Phí hợp lý hơn nhiều so với các ứng dụng lớn.</p>
+        <div class="tauthor">
+          <div class="tav">H</div>
+          <div><div class="tname">Chị Hương</div><div class="tloc">Phường 5, TP. Local</div></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span></div>
+        <p class="ttext">Trời mưa vẫn giao, chỉ thêm 5.000 đồng thôi. Shipper rất nhiệt tình, gọi báo trước khi đến. Sẽ ủng hộ dài dài!</p>
+        <div class="tauthor">
+          <div class="tav">M</div>
+          <div><div class="tname">Anh Minh</div><div class="tloc">Phường 8, TP. Local</div></div>
+        </div>
+      </div>
+      <div class="tcard">
+        <div class="stars"><span class="star"></span><span class="star"></span><span class="star"></span><span class="star"></span><span class="star off"></span></div>
+        <p class="ttext">Dịch vụ đón hàng xe buýt rất tiện. Mình gửi đồ từ Sài Gòn về, nhắn tin là có người ra bến đón ngay, không lo thất lạc.</p>
+        <div class="tauthor">
+          <div class="tav">T</div>
+          <div><div class="tname">Em Trang</div><div class="tloc">Gần bến xe, TP. Local</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="fgrid">
+    <div class="fbrand">
+      <a href="#" class="flogo"><span class="dot"></span>ShipNhanh</a>
+      <p>Dịch vụ ship địa phương uy tín, nhanh chóng, giá cả minh bạch. Phục vụ 24/7 trong toàn địa bàn thành phố.</p>
+    </div>
+    <div class="fcol">
+      <h5>Dịch vụ</h5>
+      <ul>
+        <li><a href="#">Ship hàng</a></li>
+        <li><a href="#">Mua hộ</a></li>
+        <li><a href="#">Gửi xe buýt</a></li>
+        <li><a href="#">Lái xe hộ</a></li>
+        <li><a href="#">Chuyển khoản</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h5>Hỗ trợ</h5>
+      <ul>
+        <li><a href="#">Tạo đơn</a></li>
+        <li><a href="#">Tra cứu đơn</a></li>
+        <li><a href="#">Bảng giá</a></li>
+        <li><a href="#">Câu hỏi thường gặp</a></li>
+        <li><a href="#">Liên hệ</a></li>
+      </ul>
+    </div>
+    <div class="fcol">
+      <h5>Liên hệ</h5>
+      <ul class="fcontact">
+        <li><b>Tel</b>0909 xxx xxx (24/7)</li>
+        <li><b>Zalo</b>0909 xxx xxx</li>
+        <li><b>FB</b>ShipNhanh Local</li>
+        <li><b>KV</b>Toàn TP. Local và vùng lân cận</li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>© 2025 ShipNhanh Local. Bảo lưu mọi quyền.</span>
+    <div class="fsoc">
+      <a href="#" class="soc">FB</a>
+      <a href="#" class="soc">ZL</a>
+      <a href="#" class="soc">YT</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const rules=[{max:1.5,p:12000},{max:4,p:15000},{max:5,p:18000},{max:6,p:20000},{max:7,p:25000}];
+function calcFee(km){for(const r of rules)if(km<=r.max)return r.p;return null;}
+function updateFee(){
+  const t=document.getElementById('serviceType').value;
+  const d=parseFloat(document.getElementById('distInput').value)||0;
+  const s=parseInt(document.getElementById('surcharge').value)||0;
+  const el=document.getElementById('feeVal');
+  document.getElementById('distGrp').style.display=t==='DELIVERY'?'block':'none';
+  if(t==='BUY_FOR'||t==='BUS_PICKUP'){el.textContent=(20000+s).toLocaleString('vi-VN')+' đ';}
+  else if(t==='DRIVER_HELP'){el.textContent='Liên hệ tư vấn';}
+  else{
+    if(d<=0){el.textContent='—';return;}
+    const b=calcFee(d);
+    el.textContent=b?(b+s).toLocaleString('vi-VN')+' đ':'Thỏa thuận';
+  }
+}
+function doOrder(){
+  alert('Đơn hàng đã được ghi nhận!\nChúng tôi sẽ liên hệ xác nhận trong vài phút.\nCảm ơn bạn đã tin tưởng ShipNhanh!');
+}
+updateFee();
+
+function openVid(){
+  document.getElementById('vmodal').classList.add('open');
+  document.getElementById('mvid').play();
+}
+function closeVid(){
+  document.getElementById('vmodal').classList.remove('open');
+  document.getElementById('mvid').pause();
+}
+document.getElementById('vmodal').addEventListener('click',function(e){if(e.target===this)closeVid();});
+
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in');});},{threshold:0.08});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

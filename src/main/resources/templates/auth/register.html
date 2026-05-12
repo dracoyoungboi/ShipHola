@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{common/head :: head('Đăng ký - ShipHola')}"></head>
+<body class="auth-page">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo">
+                    <span class="logo-icon">🚚</span>
+                    <span class="logo-text">ShipHola</span>
+                </div>
+                <h1>Đăng ký</h1>
+                <p>Tạo tài khoản mới</p>
+            </div>
+
+            <div th:replace="~{common/alerts :: alerts}"></div>
+
+            <form th:action="@{/auth/register}" method="post" th:object="${registerDTO}" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" th:field="*{username}" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">Họ tên *</label>
+                    <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input type="password" id="password" th:field="*{password}" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">SĐT</label>
+                    <input type="tel" id="phone" th:field="*{phone}" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <input type="text" id="address" th:field="*{address}" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Đã có tài khoản? <a th:href="@{/auth/login}">Đăng nhập ngay</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

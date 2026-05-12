@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Đơn hàng', ~{::content}, 'ADMIN', 'packages')}">
+<body>
+<div th:fragment="content">
+    <div class="page-actions">
+        <a th:href="@{/admin/packages/create}" class="btn btn-primary">+ Tạo đơn hàng mới</a>
+    </div>
+
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã vận đơn</th>
+                    <th>Tên gói hàng</th>
+                    <th>Người gửi</th>
+                    <th>Người nhận</th>
+                    <th>Trạng thái</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pkg : ${packages}">
+                    <td th:text="${pkg.trackingNumber}">SH123456</td>
+                    <td th:text="${pkg.packageName}">Package Name</td>
+                    <td th:text="${pkg.senderName}">Sender</td>
+                    <td th:text="${pkg.receiverName}">Receiver</td>
+                    <td>
+                        <span class="badge" th:class="'badge-' + ${pkg.status.toLowerCase()}"
+                              th:text="${pkg.status}">PENDING</span>
+                    </td>
+                    <td th:text="${#temporals.format(pkg.createdAt, 'dd/MM/yyyy')}">01/01/2024</td>
+                    <td>
+                        <a th:href="@{/admin/packages/{id}(id=${pkg.packageId})}"
+                           class="btn btn-sm btn-view">Xem</a>
+                        <a th:href="@{/admin/packages/{id}(id=${pkg.packageId})}"
+                           class="btn btn-sm btn-edit">Sửa</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Dashboard - Tổng đài', ~{::content}, 'DISPATCHER', 'dashboard')}">
+<body>
+<div th:fragment="content">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+                <h3>Đơn chờ xử lý</h3>
+                <p class="stat-value" th:text="${pendingCount}">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <h3>Đơn đã giao shipper</h3>
+                <p class="stat-value" th:text="${assignedCount}">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <a th:href="@{/dispatcher/packages/pending}" class="btn btn-primary">
+            Xem đơn chờ xử lý
+        </a>
+    </div>
+</div>
+</body>
+</html>

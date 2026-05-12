@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Dashboard - Tài xế', ~{::content}, 'SHIPPER', 'dashboard')}">
+<body>
+<div th:fragment="content">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+                <h3>Đơn cần giao</h3>
+                <p class="stat-value" th:text="${pendingCount}">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <h3>Đã giao hôm nay</h3>
+                <p class="stat-value" th:text="${deliveredCount}">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <a th:href="@{/shipper/packages}" class="btn btn-primary">
+            Xem đơn của tôi
+        </a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Dashboard', ~{::content}, 'ADMIN', 'dashboard')}">
+<body>
+<div th:fragment="content">
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+                <h3>Tổng đơn hàng</h3>
+                <p class="stat-value" th:text="${totalPackages}">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⏳</div>
+            <div class="stat-info">
+                <h3>Đơn chờ xử lý</h3>
+                <p class="stat-value" th:text="${pendingPackages}">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🚚</div>
+            <div class="stat-info">
+                <h3>Đơn đang giao</h3>
+                <p class="stat-value" th:text="${inTransitPackages}">0</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+                <h3>Đã giao hôm nay</h3>
+                <p class="stat-value" th:text="${deliveredTodayPackages}">0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-actions">
+        <a th:href="@{/admin/packages/create}" class="btn btn-primary">
+            <span>+</span> Tạo đơn hàng mới
+        </a>
+        <a th:href="@{/admin/packages}" class="btn btn-secondary">
+            Xem tất cả đơn hàng
+        </a>
+    </div>
+</div>
+</body>
+</html>
